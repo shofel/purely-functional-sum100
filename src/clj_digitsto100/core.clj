@@ -12,7 +12,38 @@
 
 (ns clj-digitsto100.core)
 
-(defn foo
-  "I don't do a whole lot."
-  [x]
-  (println x "Hello, World!"))
+;;; As task mentions, the output should be a list of strings.
+;;; Let's make it as the last step.
+;;; Then what's the first?
+
+;; Ok, first of all, the input is always the list of digits 1..9.
+(defn digits
+  "List of digits from 1 to 9"
+  []
+  (range 1 10))
+
+;; Basically, we should make a couple of things:
+;;   - the first is decision taking: choose one of three options
+;;   - provide inputs for those decisions
+;;   - accumulate taken decisions
+
+;; Unavoidably, we will iterate over places between the digits.
+;; And accumulate the result.
+;; Look Ma this is a `reduce`!
+
+;; Ok, then. The input is digits from 1 to 9.
+;; What is the output?
+;;   - a list of all decisions taken?
+;;   - a list of digits and signs between them?
+;;
+;; The first option will require merging back with digits.
+;; The second option contain all the info.
+;;
+;; Then let's go with the second
+
+;; Decision making function.
+;; For the beginning: the decision is always noop.
+(defn step
+  ""
+  [acc [first & rest]]
+  [(conj acc first) rest])

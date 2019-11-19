@@ -5,4 +5,5 @@
             :url "https://www.eclipse.org/legal/epl-2.0/"}
   :dependencies [[org.clojure/clojure "1.10.0"]]
   :repl-options {:init-ns clj-digitsto100.core}
-  :plugins [[lein-auto "0.1.3"]])
+  :plugins [[lein-auto "0.1.3"]
+            [cider/cider-nrepl "0.22.4"]])
