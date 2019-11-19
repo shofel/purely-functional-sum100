@@ -9,6 +9,10 @@
 
 (deftest step-test
   (testing "Step moves a digit from rest to acc"
-    (is (= (step [] [1 2 3]) [[1] [2 3]]))
-    (is (= (step [] [1]) [[1] nil]))
+    (is (= (step [] [1 2 3]) [[1] [2 3]])))
+
+  (testing "The last step"
+    (is (= (step [] [1]) [[1] nil])))
+
+  (testing "Throw when no more steps"
     (is (thrown? AssertionError (step [1] [])))))
