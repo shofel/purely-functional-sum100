@@ -46,5 +46,5 @@
 (defn step
   ""
   [acc [first & rest]]
-  {:pre [(not-empty rest)]}
+  {:pre [(number? first)]}
   [(conj acc first) rest])
