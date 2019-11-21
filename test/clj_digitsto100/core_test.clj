@@ -20,19 +20,19 @@
 
 (deftest decode|-test
   (testing "No |"
-    (is (= (decode|) []))
-    (is (= (decode| 3) [3])))
+    (is (= (decode| []) []))
+    (is (= (decode| [3]) [3])))
   (testing "Applies | correctly"
-    (is (= (decode| 1 | 1) [11]))
-    (is (= (decode| 1 | 2 | 3) [123])))
+    (is (= (decode| [1 | 1]) [11]))
+    (is (= (decode| [1 | 2 | 3]) [123])))
   (testing "Preserves + and -"
-    (is (= (decode| 1 + 1) [1 + 1]))
-    (is (= (decode| 1 - 1) [1 - 1])))
+    (is (= (decode| [1 + 1]) [1 + 1]))
+    (is (= (decode| [1 - 1]) [1 - 1])))
   (testing "Combinations of | + -"
-    (is (= (decode| 1 | 2 - 3) [12 - 3]))
-    (is (= (decode| 1 | 2 + 3) [12 + 3])))
+    (is (= (decode| [1 | 2 - 3]) [12 - 3]))
+    (is (= (decode| [1 | 2 + 3]) [12 + 3])))
   (testing "When no | at the first place"
-    (is (= (decode| 1 + 2 | 3) [1 + 23]))))
+    (is (= (decode| [1 + 2 | 3]) [1 + 23]))))
 
 
 (deftest signed-numbers-test

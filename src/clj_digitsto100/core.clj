@@ -57,21 +57,21 @@
 ;;; Decode |
 ;;;
 
-(declare decode|)
-
-(defn decode|'
-  "Like decode| but takes all args in one list"
-  [x]
-  (apply decode| x))
+(declare decode|')
 
 (defn decode|
   "Apply all | operators in a given seq"
+  [x]
+  (apply decode|' x))
+
+(defn decode|'
+  "Like decode| but takes all args in one list"
   ([] [])
   ([x] [x])
   ([x op y & tail]
    (condp = op
-     | (decode|' (cons (| x y) tail))
-     (concat [x op] (decode|' (cons y tail))))))
+     | (decode| (cons (| x y) tail))
+     (concat [x op] (decode| (cons y tail))))))
 
 (defn signed-numbers
   "Given a list like [- 2 + 3 ...],
@@ -83,9 +83,8 @@
 
 (defn decode+-
   "Apply + and - in a given seq."
-  [x xs]
-
-  )
+  [x & xs]
+  (cons x (signed-numbers xs)))
 
 #_(defn decode
   "Which number is represented by the sequence?"
