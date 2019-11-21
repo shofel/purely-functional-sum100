@@ -10,7 +10,8 @@
 ;;; The function should output a list of strings with these formulas.
 ;;;
 
-(ns clj-digitsto100.core)
+(ns clj-digitsto100.core
+  (:require [clojure.string :as str]))
 
 ;;; As task mentions, the output should be a list of strings.
 ;;; Let's make it as the last step.
@@ -161,22 +162,38 @@
   (concat [1]
           (mapcat vector xs (range 2 10))))
 
-(defn ->chars
+(defn expr->chars
   [xs]
-  (let [opchars {- '-
-                 + '+
-                 | '| }]
+  (let [opchars {- " - "
+                 + " + "
+                 | "" }]
     (map
       #(get opchars % %)
       xs)))
 
+(defn render-expression
+  [expr]
+  (-> expr
+      expr->chars
+      (str/join)))
+
+(defn render-single-solution
+  [s]
+  (-> s
+      render-expression
+      (str " = 100")))
+
 ;;; TODO make expression ops always looking well
 
-#_(->>
-        (combinations 8 [+ - |])
-        (map ops->expression)
-        (filter hundred?)
-        (map ->chars))
+(defn -main
+  []
+  (->>
+    (combinations 8 [+ - |])
+    (map ops->expression)
+    (filter hundred?)
+    (map render-single-solution)))
+
+#_(-main)
 
 ;; Answer
 #_((1 + 2 + 3 - 4 + 5 + 6 + 7 | 8 + 9)
@@ -190,3 +207,17 @@
    (1 | 2 | 3 + 4 | 5 - 6 | 7 + 8 - 9)
    (1 | 2 | 3 - 4 - 5 - 6 - 7 + 8 - 9)
    (1 | 2 | 3 - 4 | 5 - 6 | 7 + 8 | 9))
+
+;; Formatted answer
+#_(list
+    "1 + 2 + 3 - 4 + 5 + 6 + 78 + 9 = 100"
+    "1 + 2 + 34 - 5 + 67 - 8 + 9 = 100"
+    "1 + 23 - 4 + 5 + 6 + 78 - 9 = 100"
+    "1 + 23 - 4 + 56 + 7 + 8 + 9 = 100"
+    "12 + 3 + 4 + 5 - 6 - 7 + 89 = 100"
+    "12 + 3 - 4 + 5 + 67 + 8 + 9 = 100"
+    "12 - 3 - 4 + 5 - 6 + 7 + 89 = 100"
+    "123 + 4 - 5 + 67 - 89 = 100"
+    "123 + 45 - 67 + 8 - 9 = 100"
+    "123 - 4 - 5 - 6 - 7 + 8 - 9 = 100"
+    "123 - 45 - 67 + 89 = 100")

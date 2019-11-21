@@ -97,6 +97,27 @@
     (is (= (ops->expression [+ - |])
            [1 + 2 - 3 | 4]))))
 
+;;; to string
+
+(deftest render-one-expression-test
+  (testing "render expression"
+    (is (= (->
+             [- | +]
+             ops->expression
+             render-expression)
+           "1 - 23 + 4"))))
+
+(deftest render-single-solution-test
+  (testing "render one solution"
+    (is (= (->
+             [- | +]
+             ops->expression
+             render-single-solution)
+           "1 - 23 + 4 = 100"))))
+
+(deftest expr->chars-test
+  (testing "expr to chars"
+    (is (= (expr->chars [1 + 2]) [1 " + " 2]))))
 
 
 
