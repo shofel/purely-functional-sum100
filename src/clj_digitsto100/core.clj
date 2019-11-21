@@ -73,6 +73,20 @@
      | (decode|' (cons (| x y) tail))
      (concat [x op] (decode|' (cons y tail))))))
 
+(defn signed-numbers
+  "Given a list like [- 2 + 3 ...],
+  make a list of numbers with + or - sign."
+  [xs]
+  (->> xs
+       (partition 2)
+       (map (comp eval seq))))
+
+(defn decode+-
+  "Apply + and - in a given seq."
+  [x xs]
+
+  )
+
 #_(defn decode
   "Which number is represented by the sequence?"
   [& xs]

@@ -35,6 +35,17 @@
     (is (= (decode| 1 + 2 | 3) [1 + 23]))))
 
 
+(deftest signed-numbers-test
+  (testing "all?"
+    (is (= (signed-numbers [+ 1]) [1]))
+    #_(is (= (signed-numbers [- 1]) [-1]))
+    #_(is (= (signed-numbers [- 1 - 2]) [-1 -2]))))
+
+#_(deftest decode+--test
+  (testing "Just a value"
+    (is (= (decode+- 1) 1))))
+
+
 #_(deftest decode-test
   (testing "Let's start with |"
     (is (= (decode 1 | 2) 12))
