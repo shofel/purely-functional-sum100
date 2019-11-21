@@ -127,3 +127,33 @@
   (-> expression
       decode
       (= 100)))
+
+
+
+;;; At this point we are ready to get the right solutions from a list
+;;; of solutions. Let's generate all solutions and take correct ones.
+
+(defn append-tails
+  [head tails]
+  (let [heads (repeat (count tails) head)]
+    (map conj heads tails)))
+
+(defn combinations
+  "Generate all combinations for a given alphabet of a given length"
+  ([length alphabet]
+   (condp = length
+     (combinations [[]] length alphabet)))
+  ([heads length alphabet]
+   (if (zero? length) heads
+     (combinations
+       (mapcat
+         #(append-tails % alphabet)
+         heads)
+       (dec length)
+       alphabet))))
+
+
+#_(->
+ (combinations 3 [1 2 3])
+ count
+ )
