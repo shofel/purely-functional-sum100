@@ -61,12 +61,12 @@
 (declare decode|')
 
 (defn decode|
-  "Apply all | operators in a given seq"
+  "Apply `decode|'` to a list"
   [x]
   (apply decode|' x))
 
 (defn decode|'
-  "Like decode| but takes all args in one list"
+  "Make expression with all the `|` applied"
   ([] [])
   ([x] [x])
   ([x op y & tail]
