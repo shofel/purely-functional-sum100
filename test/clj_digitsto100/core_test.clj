@@ -26,18 +26,21 @@
     (is (= (decode| 1 | 1) [11]))
     (is (= (decode| 1 | 2 | 3) [123])))
   (testing "Preserves + and -"
-      (is (= (decode| 1 + 1) [1 + 1])))
-  #_(testing "Combinations of | + -"
-      (is (= (decode| '(1 | 2 + 3)) '(12 + 3)))
-      (is (= (decode| '(1 + 2 | 3)) '(1 + 23)))))
+    (is (= (decode| 1 + 1) [1 + 1]))
+    (is (= (decode| 1 - 1) [1 - 1])))
+  (testing "Combinations of | + -"
+    (is (= (decode| 1 | 2 - 3) [12 - 3]))
+    (is (= (decode| 1 | 2 + 3) [12 + 3])))
+  (testing "When no | at the first place"
+    (is (= (decode| 1 + 2 | 3) [1 + 23]))))
 
 
 #_(deftest decode-test
   (testing "Let's start with |"
-    (is (= (decode '(1 | 2)) 12))
-    (is (= (decode '(1 | 2 | 3)) 123)))
+    (is (= (decode 1 | 2) 12))
+    (is (= (decode 1 | 2 | 3) 123)))
   #_(testing "The right precedence | vs +"
-        (= (decode '(1 + 2 | 3) 24))))
+        (= (decode 1 + 2 | 3) 24)))
 
 
 (deftest |-test

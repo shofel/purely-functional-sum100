@@ -71,7 +71,7 @@
   ([x op y & tail]
    (condp = op
      | (decode|' (cons (| x y) tail))
-     (concat [x op y] (decode|' tail)))))
+     (concat [x op] (decode|' (cons y tail))))))
 
 #_(defn decode
   "Which number is represented by the sequence?"
