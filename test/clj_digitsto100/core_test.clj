@@ -92,6 +92,12 @@
     (is (= (count (combinations 4 [1 2])) 16))))
 
 
+(deftest opt->expression-test
+  (testing "Augment ops with digits"
+    (is (= (ops->expression [+ - |])
+           [1 + 2 - 3 | 4]))))
+
+
 
 
 #_(do

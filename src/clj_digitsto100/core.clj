@@ -153,7 +153,40 @@
        alphabet))))
 
 
-#_(->
- (combinations 3 [1 2 3])
- count
- )
+;;; TODO seq of ops to expression
+;;; TODO generate and filter
+
+(defn ops->expression
+  [xs]
+  (concat [1]
+          (mapcat vector xs (range 2 10))))
+
+(defn ->chars
+  [xs]
+  (let [opchars {- '-
+                 + '+
+                 | '| }]
+    (map
+      #(get opchars % %)
+      xs)))
+
+;;; TODO make expression ops always looking well
+
+#_(->>
+        (combinations 8 [+ - |])
+        (map ops->expression)
+        (filter hundred?)
+        (map ->chars))
+
+;; Answer
+#_((1 + 2 + 3 - 4 + 5 + 6 + 7 | 8 + 9)
+   (1 + 2 + 3 | 4 - 5 + 6 | 7 - 8 + 9)
+   (1 + 2 | 3 - 4 + 5 + 6 + 7 | 8 - 9)
+   (1 + 2 | 3 - 4 + 5 | 6 + 7 + 8 + 9)
+   (1 | 2 + 3 + 4 + 5 - 6 - 7 + 8 | 9)
+   (1 | 2 + 3 - 4 + 5 + 6 | 7 + 8 + 9)
+   (1 | 2 - 3 - 4 + 5 - 6 + 7 + 8 | 9)
+   (1 | 2 | 3 + 4 - 5 + 6 | 7 - 8 | 9)
+   (1 | 2 | 3 + 4 | 5 - 6 | 7 + 8 - 9)
+   (1 | 2 | 3 - 4 - 5 - 6 - 7 + 8 - 9)
+   (1 | 2 | 3 - 4 | 5 - 6 | 7 + 8 | 9))
