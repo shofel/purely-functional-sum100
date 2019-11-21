@@ -34,8 +34,8 @@
 ;;   - a list of digits and signs between them?
 ;;
 ;; The first option will require merging back with digits.
-;; The second option contain all the info. But | changes the number
-;; of an element.
+;; The second option contain all the info. But `|` changes the number
+;; of elements.
 ;;
 ;; To not be affected by this, let's use a sequence with all
 ;; the digits and ops between them.
