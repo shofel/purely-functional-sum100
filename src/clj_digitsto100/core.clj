@@ -117,50 +117,13 @@
       decode|
       reduce+-))
 
-#_(defn calculate
-  "What number the decisions lead to?"
-  [decisions]
-  {:pre (= 8 (count decisions))}
-  (let [op->digit (map vector decisions (rest (digits)))
-        op->number (map op-digit)]
-    ;; We can treat `+` and `-` as a modifiers for the next number.
-    ;; Somewhat making a number from a digit. Then sum all of them.
-    ;; But `|` is different. It applies to two digits at once. The
-    ;; similarity is it also makes a number, which is to be summed.
-    ;;
-    ;; Given the above, it's ok to store `+` and `-` in a pair with
-    ;; a digit. But we need another way for `|`.
-
-
-    ;; Firstly, apply all the `|`.
-    (-> pairs
-      (map numbers))
-    (reduce
-      (fn [acc [f digit]] (f acc digit))
-      1
-      pairs)))
-
-#_(def decisions [+ + | - + | - +])
-
 ;; It'd be easier to have two different lists:
 ;; - one with digits from 1 to 9
 ;; - one with taken decisions
 ;; Then zip them, and reduce to a number.
 (defn hundred?
   "Check if all taken decisions lead to the sum of 100"
-  [decisions]
-
-)
-
-(map vector (digits) (rest (digits)))
-
-;; Let's walk the tree of decisions
-#_(defn walk-step
-  "Do one step of the walk"
-  [state rest]
-  (if (empty? rest) state ; done
-    ; plus
-    ; minus
-    ; glue
-    )
-  )
+  [expression]
+  (-> expression
+      decode
+      (= 100)))

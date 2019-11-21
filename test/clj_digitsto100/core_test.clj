@@ -66,11 +66,11 @@
     (is (= (| 3 5) 35))
     (is (= (| 6 0) 60))))
 
-#_(deftest hundred?-test
+(deftest hundred?-test
   (testing "A solution from the text of the task"
-    (is (= (hundred? [+ + | - + | - +]) true)))
+    (is (= (hundred? [1 + 2 + 3 | 4 - 5 + 6 | 7 - 8 + 9]) true)))
   (testing "Obviously wrong: sum all the digits"
-    (is (= (hundred? [+ + + + + + + +]) false))))
+    (is (= (hundred? [1 + 2 + 3 + 4 + 5 + 6 + 7 + 8 + 9]) false))))
 
 
 
