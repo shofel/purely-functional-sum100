@@ -59,7 +59,17 @@
   "What number the decisions lead to?"
   [decisions]
   {:pre (= 8 (count decisions))}
-  (let [pairs (map vector decisions (rest (digits)))]
+  (let [op->digit (map vector decisions (rest (digits)))
+        op->number (map op-digit)]
+    ;; We can treat `+` and `-` as a modifiers for the next number.
+    ;; Somewhat making a number from a digit. Then sum all of them.
+    ;; But `|` is different. It applies to two digits at once. The
+    ;; similarity is it also makes a number, which is to be summed.
+    ;;
+    ;; Given the above, it's ok to store `+` and `-` in a pair with
+    ;; a digit. But we need another way for `|`.
+
+
     ;; Firstly, apply all the `|`.
     (-> pairs
       (map numbers))
@@ -68,7 +78,7 @@
       1
       pairs)))
 
-#_(calculate [+ + | - + | - +])
+#_(def decisions [+ + | - + | - +])
 
 ;; It'd be easier to have two different lists:
 ;; - one with digits from 1 to 9
