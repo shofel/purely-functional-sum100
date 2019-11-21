@@ -105,12 +105,17 @@
         (cons x)
         (apply +))))
 
-#_(defn decode
+;;;
+;;; Combine `decode|` and `reduce+-`.
+;;; It's the final decode.
+;;;
+
+(defn decode
   "Which number is represented by the sequence?"
-  [& xs]
-  ;; Firstly, reduce |
-  (let )
-  )
+  [xs]
+  (-> xs
+      decode|
+      reduce+-))
 
 #_(defn calculate
   "What number the decisions lead to?"

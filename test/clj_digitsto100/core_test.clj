@@ -50,11 +50,14 @@
 
 
 (deftest decode-test
-  #_(testing "Let's start with |"
+  (testing "Let's start with |"
     (is (= (decode [1 | 2]) 12))
     (is (= (decode [1 | 2 | 3]) 123)))
-  #_(testing "The right precedence | vs +"
-        (= (decode [1 + 2 | 3]) 24)))
+  (testing "+ and -"
+    (is (= (decode [1 + 2 - 3]) 0)))
+  (testing "The right precedence | vs +"
+    (is (= (decode [1 + 2 | 3]) 24))
+    (is (= (decode [1 + 2 | 3 - 4]) 20))))
 
 
 (deftest |-test
@@ -68,6 +71,10 @@
     (is (= (hundred? [+ + | - + | - +]) true)))
   (testing "Obviously wrong: sum all the digits"
     (is (= (hundred? [+ + + + + + + +]) false))))
+
+
+
+
 
 #_(do
 ;;;
