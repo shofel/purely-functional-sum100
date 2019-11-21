@@ -27,19 +27,17 @@
 ;;   - provide inputs for those decisions
 ;;   - accumulate taken decisions
 
-;; Unavoidably, we will iterate over places between the digits.
-;; And accumulate the result.
-;; Look Ma this is a `reduce`!
-
 ;; Ok, then. The input is digits from 1 to 9.
 ;; What is the output?
 ;;   - a list of all decisions taken?
 ;;   - a list of digits and signs between them?
 ;;
 ;; The first option will require merging back with digits.
-;; The second option contain all the info.
+;; The second option contain all the info. But | changes the number
+;; of an element.
 ;;
-;; Then let's go with the second
+;; To not be affected by this, let's use a sequence with all
+;; the digits and ops between them.
 
 ;; Decision making function.
 ;; TODO really make a decision
@@ -55,7 +53,34 @@
   [x y]
   (+ (* 10 x) y))
 
-(defn calculate
+;;;
+;;; Decode |
+;;;
+
+(declare decode|)
+
+(defn decode|'
+  "Like decode| but takes all args in one list"
+  [x]
+  (apply decode| x))
+
+(defn decode|
+  "Apply all | operators in a given seq"
+  ([] [])
+  ([x] [x])
+  ([x op y & tail]
+   (condp = op
+     | (decode|' (cons (| x y) tail))
+     (concat [x op y] (decode|' tail)))))
+
+#_(defn decode
+  "Which number is represented by the sequence?"
+  [& xs]
+  ;; Firstly, reduce |
+  (let )
+  )
+
+#_(defn calculate
   "What number the decisions lead to?"
   [decisions]
   {:pre (= 8 (count decisions))}

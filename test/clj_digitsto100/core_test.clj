@@ -18,6 +18,28 @@
     (is (thrown? AssertionError (step [1] [])))))
 
 
+(deftest decode|-test
+  (testing "No |"
+    (is (= (decode|) []))
+    (is (= (decode| 3) [3])))
+  (testing "Applies | correctly"
+    (is (= (decode| 1 | 1) [11]))
+    (is (= (decode| 1 | 2 | 3) [123])))
+  (testing "Preserves + and -"
+      (is (= (decode| 1 + 1) [1 + 1])))
+  #_(testing "Combinations of | + -"
+      (is (= (decode| '(1 | 2 + 3)) '(12 + 3)))
+      (is (= (decode| '(1 + 2 | 3)) '(1 + 23)))))
+
+
+#_(deftest decode-test
+  (testing "Let's start with |"
+    (is (= (decode '(1 | 2)) 12))
+    (is (= (decode '(1 | 2 | 3)) 123)))
+  #_(testing "The right precedence | vs +"
+        (= (decode '(1 + 2 | 3) 24))))
+
+
 (deftest |-test
   (testing "Only trivial cases. No leading zero; only single digits"
     (is (= (| 1 2) 12))
