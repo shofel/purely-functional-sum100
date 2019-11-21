@@ -50,7 +50,7 @@
 
 (defn |
   "An operator which represents decision to glue two digits.
-  @example (= (. 1 2) 12)"
+  @example (= (| 1 2) 12)"
   [x y]
   (+ (* 10 x) y))
 
