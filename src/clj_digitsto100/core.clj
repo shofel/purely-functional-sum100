@@ -42,9 +42,53 @@
 ;; Then let's go with the second
 
 ;; Decision making function.
-;; For the beginning: the decision is always noop.
+;; TODO really make a decision
 (defn step
   ""
   [acc [first & rest]]
   {:pre [(number? first)]}
   [(conj acc first) rest])
+
+(defn |
+  "An operator which represents decision to glue two digits.
+  @example (= (. 1 2) 12)"
+  [x y]
+  (+ (* 10 x) y))
+
+(defn calculate
+  "What number the decisions lead to?"
+  [decisions]
+  {:pre (= 8 (count decisions))}
+  (let [pairs (map vector decisions (rest (digits)))]
+    ;; Firstly, apply all the `|`.
+    (-> pairs
+      (map numbers))
+    (reduce
+      (fn [acc [f digit]] (f acc digit))
+      1
+      pairs)))
+
+#_(calculate [+ + | - + | - +])
+
+;; It'd be easier to have two different lists:
+;; - one with digits from 1 to 9
+;; - one with taken decisions
+;; Then zip them, and reduce to a number.
+(defn hundred?
+  "Check if all taken decisions lead to the sum of 100"
+  [decisions]
+
+)
+
+(map vector (digits) (rest (digits)))
+
+;; Let's walk the tree of decisions
+#_(defn walk-step
+  "Do one step of the walk"
+  [state rest]
+  (if (empty? rest) state ; done
+    ; plus
+    ; minus
+    ; glue
+    )
+  )

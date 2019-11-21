@@ -16,3 +16,51 @@
 
   (testing "Throw when no more steps"
     (is (thrown? AssertionError (step [1] [])))))
+
+
+(deftest |-test
+  (testing "Only trivial cases. No leading zero; only single digits"
+    (is (= (| 1 2) 12))
+    (is (= (| 3 5) 35))
+    (is (= (| 6 0) 60))))
+
+#_(deftest hundred?-test
+  (testing "A solution from the text of the task"
+    (is (= (hundred? [+ + | - + | - +]) true)))
+  (testing "Obviously wrong: sum all the digits"
+    (is (= (hundred? [+ + + + + + + +]) false))))
+
+#_(do
+;;;
+;;; Playground for `conj` `cons` `concat` `into` `mapcat`
+;;;
+
+;; `conj`: take the first arg; append the rest
+;;   to the most efficient location possible
+(conj {:a 1} [:c 3])
+(conj {:a 1} [:d 3] {:d "D" :e 'E})
+(conj [3] '(4)) ; -> [3 (4)]
+(conj [3] 4) ; -> [3 4]
+;; Not necessarily to the end:
+(conj `(1) 2 3)
+
+;; `cons`: construct a sequence. Returns a seq.
+;; : head, tail -> seq
+(cons 1 `(2))
+;(cons 1 `(2) `(3)) ; wrong arity
+
+;; `concat`
+(concat [1 2] [3] [4])
+(concat [1 [2]] [3] [4]) ; reduces only one level
+(reduce
+  (fn [acc x] (conj acc x)) ; or just `conj` :)
+  {}
+  (concat {:a 1 :b 2} {:c 3}))
+
+;; into: `conj` every item into the first arg
+; The same as `reduce` above =)
+(into {} (concat {:a 1 :b 2} {:c 3}))
+
+
+(into {} (map (fn [[k v]] [k (inc v)]) {1 2 3 4}))
+)
