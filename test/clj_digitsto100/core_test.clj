@@ -38,20 +38,23 @@
 (deftest signed-numbers-test
   (testing "all?"
     (is (= (signed-numbers [+ 1]) [1]))
-    #_(is (= (signed-numbers [- 1]) [-1]))
-    #_(is (= (signed-numbers [- 1 - 2]) [-1 -2]))))
+    (is (= (signed-numbers [- 1]) [-1]))
+    (is (= (signed-numbers [- 1 - 2]) [-1 -2]))))
 
-#_(deftest decode+--test
+
+(deftest reduce+--test
   (testing "Just a value"
-    (is (= (decode+- 1) 1))))
+    (is (= (reduce+- []) 0))
+    (is (= (reduce+- [1]) 1))
+    (is (= (reduce+- [1 - 2]) -1))))
 
 
-#_(deftest decode-test
-  (testing "Let's start with |"
-    (is (= (decode 1 | 2) 12))
-    (is (= (decode 1 | 2 | 3) 123)))
+(deftest decode-test
+  #_(testing "Let's start with |"
+    (is (= (decode [1 | 2]) 12))
+    (is (= (decode [1 | 2 | 3]) 123)))
   #_(testing "The right precedence | vs +"
-        (= (decode 1 + 2 | 3) 24)))
+        (= (decode [1 + 2 | 3]) 24)))
 
 
 (deftest |-test

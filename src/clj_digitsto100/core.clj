@@ -73,6 +73,10 @@
      | (decode| (cons (| x y) tail))
      (concat [x op] (decode| (cons y tail))))))
 
+;;;
+;;; Decode+-
+;;;
+
 (defn signed-numbers
   "Given a list like [- 2 + 3 ...],
   make a list of numbers with + or - sign."
@@ -81,10 +85,25 @@
        (partition 2)
        (map (comp eval seq))))
 
-(defn decode+-
+(declare reduce+-')
+
+;; TODO find the better way
+;;      - a function in core?
+;;      - pattern matching syntax?
+(defn reduce+-
+  "Adapter for reduce+-' for easier pattern matching"
+  [x]
+  (apply reduce+-' x))
+
+(defn reduce+-'
   "Apply + and - in a given seq."
-  [x & xs]
-  (cons x (signed-numbers xs)))
+  ([] 0)
+  ([x] x)
+  ([x & xs]
+   (->> xs
+        signed-numbers
+        (cons x)
+        (apply +))))
 
 #_(defn decode
   "Which number is represented by the sequence?"
