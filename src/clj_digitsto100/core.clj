@@ -81,13 +81,12 @@
 ;;; Decode+-
 ;;;
 
-(defnp signed-numbers
+(def x-signed-numbers
   "Given a list like [- 2 + 3 ...],
   make a list of numbers with + or - sign."
-  [xs]
-  (->> xs
-       (partition 2)
-       (map (comp eval seq))))
+  (comp
+    (partition-all 2)
+    (map (comp eval seq))))
 
 (declare reduce+-')
 
@@ -99,15 +98,16 @@
   [x]
   (apply reduce+-' x))
 
+(defnp plus
+  [& xs]
+  (apply + xs))
+
 (defnp reduce+-'
   "Apply + and - in a given seq."
   ([] 0)
   ([x] x)
   ([x & xs]
-   (as-> xs v
-        (signed-numbers v)
-        (p :appl+ (reduce + v))
-        (p :+x (+ x v)))))
+   (p :x-form (transduce x-signed-numbers plus x xs))))
 
 ;;;
 ;;; Combine `decode|` and `reduce+-`.
@@ -225,6 +225,10 @@
              (map ops->expression)
              doall
              (take 0)))
+
+  ;; ?s: sum numbers
+  (time (dotimes [n 10e5]
+          (apply + (repeat 10 n))))
 )
 
 (defn expressions

@@ -35,11 +35,11 @@
     (is (= (decode| [1 + 2 | 3]) [1 + 23]))))
 
 
-(deftest signed-numbers-test
+(deftest x-signed-numbers-test
   (testing "all?"
-    (is (= (signed-numbers [+ 1]) [1]))
-    (is (= (signed-numbers [- 1]) [-1]))
-    (is (= (signed-numbers [- 1 - 2]) [-1 -2]))))
+    (is (= (eduction x-signed-numbers [+ 1]) [1]))
+    (is (= (eduction x-signed-numbers [- 1]) [-1]))
+    (is (= (eduction x-signed-numbers [- 1 - 2]) [-1 -2]))))
 
 
 (deftest reduce+--test
