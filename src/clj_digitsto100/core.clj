@@ -110,7 +110,26 @@
   (perf (comp eval seq))
 
   ; Elapsed time: 0.860691 msecs
-  (perf (fn [[op digit]] (op digit))))
+  (perf (fn [[op digit]] (op digit)))
+
+  (defnp -eval [& args] (apply eval args))
+  (defnp -seq [& args] (apply seq args))
+
+  ;; What is slow:`comp` `eval` or `seq` ??
+  ;;
+  ;; pId            nCalls      50% ≤       Mean      Clock  Total
+  ;; defn_-eval      1,000     1.60ms     1.63ms     1.63s     99%
+  ;; defn_-seq       1,000     1.20μs     1.64μs     1.64ms     0%
+  (profile
+    {}
+    (dotimes [_ 100]
+      (let [xs (sample 10)
+            numbers (map
+                      (comp -eval -seq)
+                      xs)
+            sum (apply + numbers)]
+        sum)))
+  )
 
 (declare reduce+-')
 
