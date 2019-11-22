@@ -118,3 +118,38 @@
 (deftest expr->chars-test
   (testing "expr to chars"
     (is (= (expr->chars [1 + 2]) [1 " + " 2]))))
+
+
+;;; perf
+
+
+
+(comment
+  (defn -combos
+    []
+    (combinations 8 [+ | -]))
+
+  ;; Combinations is fast, lets measure the rest.
+
+  ; 0s: -combos
+  (time (->> (-combos)
+             doall
+             (take 0)))
+
+  (def combos (-combos))
+
+  ;; 0s: ops->expression
+  (time (->> combos
+             (map ops->expression)
+             doall
+             (take 0)))
+
+  (def expressions
+    (map ops->expression combos))
+
+  ;; 35s: filter hundred?
+  (time (->> (filter hundred? expressions)
+             doall
+             (take 0)))
+
+  )

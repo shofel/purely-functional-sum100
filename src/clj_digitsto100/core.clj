@@ -188,10 +188,11 @@
 (defn -main
   []
   (->>
-    (combinations 8 [+ - |])
+    (combinations 8 [+ | -])
     (map ops->expression)
     (filter hundred?)
-    (map render-single-solution)))
+    (map render-single-solution)
+    (map println)))
 
 #_(-main)
 
