@@ -14,7 +14,7 @@
   (:require [clojure.string :as str]
             [taoensso.tufte
              :as tufte
-             :refer (defnp profile)]))
+             :refer (defnp p profile)]))
 
 ;;; As task mentions, the output should be a list of strings.
 ;;; Let's make it as the last step.
@@ -81,7 +81,7 @@
 ;;; Decode+-
 ;;;
 
-(defn signed-numbers
+(defnp signed-numbers
   "Given a list like [- 2 + 3 ...],
   make a list of numbers with + or - sign."
   [xs]
@@ -94,20 +94,20 @@
 ;; TODO find the better way
 ;;      - a function in core?
 ;;      - pattern matching syntax?
-(defnp reduce+-
+(defn reduce+-
   "Adapter for reduce+-' for easier pattern matching"
   [x]
   (apply reduce+-' x))
 
-(defn reduce+-'
+(defnp reduce+-'
   "Apply + and - in a given seq."
   ([] 0)
   ([x] x)
   ([x & xs]
-   (->> xs
-        signed-numbers
-        (cons x)
-        (apply +))))
+   (as-> xs v
+        (signed-numbers v)
+        (p :appl+ (reduce + v))
+        (p :+x (+ x v)))))
 
 ;;;
 ;;; Combine `decode|` and `reduce+-`.
@@ -225,18 +225,18 @@
              (map ops->expression)
              doall
              (take 0)))
-
-  (defn expressions
-    []
-    (map ops->expression
-         (combinations 5 [+ | -])))
-
-  ;; 35s: filter hundred?
-  (profile
-   {}
-   (take 0 (doall
-             (filter hundred? (expressions)))))
 )
+
+(defn expressions
+  []
+  (map ops->expression
+       (combinations 5 [+ | -])))
+
+;; 35s: filter hundred?
+(profile
+  {}
+  (take 0 (doall
+            (filter hundred? (expressions)))))
 
 ;; Answer
 #_((1 + 2 + 3 - 4 + 5 + 6 + 7 | 8 + 9)
