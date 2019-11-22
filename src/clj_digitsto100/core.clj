@@ -20,12 +20,6 @@
 ;;; Let's make it as the last step.
 ;;; Then what's the first?
 
-;; Ok, first of all, the input is always the list of digits 1..9.
-(defn digits
-  "List of digits from 1 to 9"
-  []
-  (range 1 10))
-
 ;; Basically, we should make a couple of things:
 ;;   - the first is decision taking: choose one of three options
 ;;   - provide inputs for those decisions
@@ -42,14 +36,6 @@
 ;;
 ;; To not be affected by this, let's use a sequence with all
 ;; the digits and ops between them.
-
-;; Decision making function.
-;; TODO really make a decision
-(defn step
-  ""
-  [acc [first & rest]]
-  {:pre [(number? first)]}
-  [(conj acc first) rest])
 
 (defn |
   "An operator which represents decision to glue two digits.
@@ -78,7 +64,7 @@
      (concat [x op] (decode| (cons y tail))))))
 
 ;;;
-;;; Decode+-
+;;; Decode + -
 ;;;
 
 (defn sum'
@@ -88,7 +74,6 @@
   (->> xs
     (partition-all 2)
     (map (fn [[op digit]] (op digit)))
-    ; (map (comp eval seq))
     (apply +)))
 
 (comment
@@ -276,16 +261,18 @@
                   (repeat n n)))))
   )
 
-(defn expressions
-  []
-  (map ops->expression
-       (combinations 8 [+ | -])))
+#_
+(do
+  (defn expressions
+    []
+    (map ops->expression
+         (combinations 8 [+ | -])))
 
-;; 35s: filter hundred?
-(profile
-  {}
-  (take 0 (doall
-            (filter hundred? (expressions)))))
+  ;; 35s: filter hundred?
+  (profile
+    {}
+    (take 0 (doall
+              (filter hundred? (expressions))))))
 
 ;; Answer
 #_((1 + 2 + 3 - 4 + 5 + 6 + 7 | 8 + 9)
