@@ -11,7 +11,10 @@
 ;;;
 
 (ns clj-digitsto100.core
-  (:require [clojure.string :as str]))
+  (:require [clojure.string :as str]
+            [taoensso.tufte
+             :as tufte
+             :refer (defnp profile)]))
 
 ;;; As task mentions, the output should be a list of strings.
 ;;; Let's make it as the last step.
@@ -60,7 +63,7 @@
 
 (declare decode|')
 
-(defn decode|
+(defnp decode|
   "Apply `decode|'` to a list"
   [x]
   (apply decode|' x))
@@ -91,7 +94,7 @@
 ;; TODO find the better way
 ;;      - a function in core?
 ;;      - pattern matching syntax?
-(defn reduce+-
+(defnp reduce+-
   "Adapter for reduce+-' for easier pattern matching"
   [x]
   (apply reduce+-' x))
@@ -195,6 +198,45 @@
     (map println)))
 
 #_(-main)
+
+;;; Profile
+(tufte/add-basic-println-handler!
+{:format-pstats-opts {:columns [:n-calls :p50 :mean :clock :total]
+                      :format-id-fn name}})
+
+;;; perf
+
+(comment
+  (defn -combos
+    []
+    (combinations 8 [+ | -]))
+
+  ;; Combinations is fast, lets measure the rest.
+
+  ; 0s: -combos
+  (time (->> (-combos)
+             doall
+             (take 0)))
+
+  (def combos (-combos))
+
+  ;; 0s: ops->expression
+  (time (->> combos
+             (map ops->expression)
+             doall
+             (take 0)))
+
+  (defn expressions
+    []
+    (map ops->expression
+         (combinations 5 [+ | -])))
+
+  ;; 35s: filter hundred?
+  (profile
+   {}
+   (take 0 (doall
+             (filter hundred? (expressions)))))
+)
 
 ;; Answer
 #_((1 + 2 + 3 - 4 + 5 + 6 + 7 | 8 + 9)
