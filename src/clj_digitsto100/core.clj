@@ -95,17 +95,22 @@
   ;; perf of sum(map (comp eval seq))ming [- 2 + 3 ...]
 
   (defn sample
+    "Pairs of a sign and a number."
     [n]
-    (interleave (map (comp eval seq))(repeat n +)
-                (map (comp eval seq))(repeat n n)))
+    (repeat n [+ n]))
 
-  ;; ?s: sum num(map (comp eval seq))bers
-  (profile {}
-           (dotimes [n 1]
-             (sum' (sample 3))
-             ))
+  (defn perf
+    [f]
+    (time (dotimes [_ 100]
+            (->> (sample 10)
+                 (map f)
+                 (apply +)))) )
 
-  )
+  ; Elapsed time: 1530.837363 msecs
+  (perf (comp eval seq))
+
+  ; Elapsed time: 0.860691 msecs
+  (perf (fn [[op digit]] (op digit))))
 
 (declare reduce+-')
 
