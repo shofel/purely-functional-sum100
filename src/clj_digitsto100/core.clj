@@ -63,12 +63,12 @@
 
 (declare decode|')
 
-(defnp decode|
+(defn decode|
   "Apply `decode|'` to a list"
   [x]
   (apply decode|' x))
 
-(defn decode|'
+(defnp decode|'
   "Make expression with all the `|` applied"
   ([] [])
   ([x] [x])
@@ -81,12 +81,31 @@
 ;;; Decode+-
 ;;;
 
-(def x-signed-numbers
+(defn sum'
   "Given a list like [- 2 + 3 ...],
   make a list of numbers with + or - sign."
-  (comp
+  [xs]
+  (->> xs
     (partition-all 2)
-    (map (comp eval seq))))
+    (map (fn [[op digit]] (op digit)))
+    ; (map (comp eval seq))
+    (apply +)))
+
+(comment
+  ;; perf of sum(map (comp eval seq))ming [- 2 + 3 ...]
+
+  (defn sample
+    [n]
+    (interleave (map (comp eval seq))(repeat n +)
+                (map (comp eval seq))(repeat n n)))
+
+  ;; ?s: sum num(map (comp eval seq))bers
+  (profile {}
+           (dotimes [n 1]
+             (sum' (sample 3))
+             ))
+
+  )
 
 (declare reduce+-')
 
@@ -107,7 +126,7 @@
   ([] 0)
   ([x] x)
   ([x & xs]
-   (p :x-form (transduce x-signed-numbers plus x xs))))
+   (p :plus-body (+ x (sum' xs)))))
 
 ;;;
 ;;; Combine `decode|` and `reduce+-`.
@@ -227,14 +246,16 @@
              (take 0)))
 
   ;; ?s: sum numbers
-  (time (dotimes [n 10e5]
-          (apply + (repeat 10 n))))
-)
+  (time (dotimes [n 10e3]
+          (sum' (interleave
+                  (repeat n :+)
+                  (repeat n n)))))
+  )
 
 (defn expressions
   []
   (map ops->expression
-       (combinations 5 [+ | -])))
+       (combinations 8 [+ | -])))
 
 ;; 35s: filter hundred?
 (profile

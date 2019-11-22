@@ -35,11 +35,11 @@
     (is (= (decode| [1 + 2 | 3]) [1 + 23]))))
 
 
-(deftest x-signed-numbers-test
+(deftest sum'-test
   (testing "all?"
-    (is (= (eduction x-signed-numbers [+ 1]) [1]))
-    (is (= (eduction x-signed-numbers [- 1]) [-1]))
-    (is (= (eduction x-signed-numbers [- 1 - 2]) [-1 -2]))))
+    (is (= (sum' [+ 1]) 1))
+    (is (= (sum' [- 1]) -1))
+    (is (= (sum' [- 1 - 2]) -3))))
 
 
 (deftest reduce+--test
