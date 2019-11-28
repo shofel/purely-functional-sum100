@@ -11,8 +11,8 @@
 ;;;
 
 (ns clj-digitsto100.core
-  (:gen-class)
-  (:require [clojure.string :as str]))
+  (:require [clojure.math.combinatorics :as combo]
+            [clojure.string :as str]))
 
 ;;; As task mentions, the output should be a list of strings.
 ;;; Let's make it as the last step.
@@ -117,21 +117,6 @@
   (let [heads (repeat (count tails) head)]
     (map conj heads tails)))
 
-(defn combinations
-  "Generate all combinations for a given alphabet of a given length"
-  ([length alphabet]
-   (condp = length
-     (combinations [[]] length alphabet)))
-  ([heads length alphabet]
-   (if (zero? length) heads
-     (combinations
-       (mapcat
-         #(append-tails % alphabet)
-         heads)
-       (dec length)
-       alphabet))))
-
-
 ;;; TODO seq of ops to expression
 ;;; TODO generate and filter
 
@@ -163,16 +148,18 @@
 
 ;;; Main
 
-(defn -main
+(defn -main'
   []
   (->>
-    (combinations 8 [+ | -])
+    (combo/selections [+ | -] 8)
     (map ops->expression)
     (filter hundred?)
     (map render-single-solution)
     (println)))
 
-; (time (-main))
+(defn -main
+  []
+  (time (-main')))
 
 
 ;; Answer

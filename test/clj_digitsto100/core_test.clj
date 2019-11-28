@@ -58,19 +58,6 @@
     (is (= (append-tails [1 2 3] [7 8])
            [[1 2 3 7] [1 2 3 8]]))))
 
-(deftest combinations-test
-  (testing "The empty combination of zero-length"
-    (is (= (combinations 0 []) [[]])))
-  (testing "Length 1 is each letter"
-    (is (= (combinations 1 [6 7]) [[6] [7]])))
-  (testing "Real combos"
-    (is (= (set (combinations 2 [1 2]))
-           #{[1 1] [1 2] [2 1] [2 2]})))
-  (testing "Length of the list"
-    (is (= (count (combinations 3 [1 2 3])) 27))
-    (is (= (count (combinations 4 [1 2])) 16))))
-
-
 (deftest opt->expression-test
   (testing "Augment ops with digits"
     (is (= (ops->expression [+ - |])
