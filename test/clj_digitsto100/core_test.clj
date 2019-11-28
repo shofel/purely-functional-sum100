@@ -20,21 +20,15 @@
     (is (= (decode| [1 + 2 | 3]) [1 + 23]))))
 
 
-(deftest sum'-test
+(deftest decode+--test
   (testing "all?"
-    (is (= (sum' [+ 1]) 1))
-    (is (= (sum' [- 1]) -1))
-    (is (= (sum' [- 1 - 2]) -3))))
+    (is (= (decode+- []) 0))
+    (is (= (decode+- [1 + 1]) 2))
+    (is (= (decode+- [1 - 1]) 0))
+    (is (= (decode+- [1 - 2 + 3]) 2))))
 
 
-(deftest reduce+--test
-  (testing "Just a value"
-    (is (= (reduce+- []) 0))
-    (is (= (reduce+- [1]) 1))
-    (is (= (reduce+- [1 - 2]) -1))))
-
-
-(deftest decode-test
+#_(deftest decode-test
   (testing "Let's start with |"
     (is (= (decode [1 | 2]) 12))
     (is (= (decode [1 | 2 | 3]) 123)))
@@ -51,7 +45,7 @@
     (is (= (| 3 5) 35))
     (is (= (| 6 0) 60))))
 
-(deftest hundred?-test
+#_(deftest hundred?-test
   (testing "A solution from the text of the task"
     (is (= (hundred? [1 + 2 + 3 | 4 - 5 + 6 | 7 - 8 + 9]) true)))
   (testing "Obviously wrong: sum all the digits"

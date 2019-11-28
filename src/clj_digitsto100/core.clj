@@ -11,10 +11,8 @@
 ;;;
 
 (ns clj-digitsto100.core
-  (:require [clojure.string :as str]
-            [taoensso.tufte
-             :as tufte
-             :refer (defnp p profile)]))
+  (:gen-class)
+  (:require [clojure.string :as str]))
 
 ;;; As task mentions, the output should be a list of strings.
 ;;; Let's make it as the last step.
@@ -54,7 +52,7 @@
   [x]
   (apply decode|' x))
 
-(defnp decode|'
+(defn decode|'
   "Make expression with all the `|` applied"
   ([] [])
   ([x] [x])
@@ -67,7 +65,7 @@
 ;;; Decode + -
 ;;;
 
-(defn sum'
+(defn sign-sum
   "Given a list like [- 2 + 3 ...],
   make a list of numbers with + or - sign."
   [xs]
@@ -76,89 +74,38 @@
     (map (fn [[op digit]] (op digit)))
     (apply +)))
 
-(comment
-  ;; perf of sum(map (comp eval seq))ming [- 2 + 3 ...]
-
-  (defn sample
-    "Pairs of a sign and a number."
-    [n]
-    (repeat n [+ n]))
-
-  (defn perf
-    [f]
-    (time (dotimes [_ 100]
-            (->> (sample 10)
-                 (map f)
-                 (apply +)))) )
-
-  ; Elapsed time: 1530.837363 msecs
-  (perf (comp eval seq))
-
-  ; Elapsed time: 0.860691 msecs
-  (perf (fn [[op digit]] (op digit)))
-
-  (defnp -eval [& args] (apply eval args))
-  (defnp -seq [& args] (apply seq args))
-
-  ;; What is slow:`comp` `eval` or `seq` ??
-  ;;
-  ;; pId            nCalls      50% ≤       Mean      Clock  Total
-  ;; defn_-eval      1,000     1.60ms     1.63ms     1.63s     99%
-  ;; defn_-seq       1,000     1.20μs     1.64μs     1.64ms     0%
-  (profile
-    {}
-    (dotimes [_ 100]
-      (let [xs (sample 10)
-            numbers (map
-                      (comp -eval -seq)
-                      xs)
-            sum (apply + numbers)]
-        sum)))
-  )
-
-(declare reduce+-')
-
-;; TODO find the better way
-;;      - a function in core?
-;;      - pattern matching syntax?
-(defn reduce+-
-  "Adapter for reduce+-' for easier pattern matching"
-  [x]
-  (apply reduce+-' x))
-
-(defnp plus
-  [& xs]
-  (apply + xs))
-
-(defnp reduce+-'
-  "Apply + and - in a given seq."
+(defn decode+-'
+  "Resolve an expression which is numbers interleaved with signs"
   ([] 0)
-  ([x] x)
-  ([x & xs]
-   (p :plus-body (+ x (sum' xs)))))
+  ([f & rst]
+   (+ f (sign-sum rst))))
+
+(defn decode+-
+  [xs]
+  (apply decode+-' xs))
+
+(comment
+  (decode+- [])
+  (decode+- [1 + 1])
+  )
 
 ;;;
 ;;; Combine `decode|` and `reduce+-`.
 ;;; It's the final decode.
 ;;;
 
-(defn decode
+(def decode
   "Which number is represented by the sequence?"
-  [xs]
-  (-> xs
-      decode|
-      reduce+-))
+  (comp decode+- decode|))
 
-;; It'd be easier to have two different lists:
-;; - one with digits from 1 to 9
-;; - one with taken decisions
-;; Then zip them, and reduce to a number.
+
 (defn hundred?
   "Check if all taken decisions lead to the sum of 100"
   [expression]
   (-> expression
       decode
       (= 100)))
+; (comp #(= 100 %) decode)
 
 
 
@@ -214,7 +161,7 @@
       render-expression
       (str " = 100")))
 
-;;; TODO make expression ops always looking well
+;;; Main
 
 (defn -main
   []
@@ -223,56 +170,10 @@
     (map ops->expression)
     (filter hundred?)
     (map render-single-solution)
-    (map println)))
+    (println)))
 
-#_(-main)
+; (time (-main))
 
-;;; Profile
-(tufte/add-basic-println-handler!
-{:format-pstats-opts {:columns [:n-calls :p50 :mean :clock :total]
-                      :format-id-fn name}})
-
-;;; perf
-
-(comment
-  (defn -combos
-    []
-    (combinations 8 [+ | -]))
-
-  ;; Combinations is fast, lets measure the rest.
-
-  ; 0s: -combos
-  (time (->> (-combos)
-             doall
-             (take 0)))
-
-  (def combos (-combos))
-
-  ;; 0s: ops->expression
-  (time (->> combos
-             (map ops->expression)
-             doall
-             (take 0)))
-
-  ;; ?s: sum numbers
-  (time (dotimes [n 10e3]
-          (sum' (interleave
-                  (repeat n :+)
-                  (repeat n n)))))
-  )
-
-#_
-(do
-  (defn expressions
-    []
-    (map ops->expression
-         (combinations 8 [+ | -])))
-
-  ;; 35s: filter hundred?
-  (profile
-    {}
-    (take 0 (doall
-              (filter hundred? (expressions))))))
 
 ;; Answer
 #_((1 + 2 + 3 - 4 + 5 + 6 + 7 | 8 + 9)
